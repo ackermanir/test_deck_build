@@ -19,7 +19,7 @@ export const initializeGame = (): GameState => {
     player: {
       actions: 1,
       buys: 1,
-      health: 20,
+      health: 30,
       gold: 0,
       cardDraw: 5,
       hand: [],
@@ -222,7 +222,34 @@ export const buyCard = (gameState: GameState, cardId: string): GameState => {
   
   const card = gameState.shopCards[cardIndex];
   
-  // Check if player has enough gold and buys
+  // Special case for UPGRADE card - shop selection phase
+  if (gameState.shopUpgradeInProgress && gameState.pendingEffects?.targetCost !== undefined) {
+    // Check if the selected card is within the target cost
+    if (card.cost <= gameState.pendingEffects.targetCost) {
+      // Remove card from shop
+      const updatedShop = [...gameState.shopCards];
+      updatedShop.splice(cardIndex, 1);
+      
+      // Add the card to the discard pile and complete the upgrade
+      return processCardEffect({
+        ...gameState,
+        shopCards: updatedShop,
+        player: {
+          ...gameState.player,
+          discardPile: [...gameState.player.discardPile, card]
+        },
+        activeEffectIndex: gameState.activeEffectIndex + 1,
+        pendingEffects: null,
+        isWaitingForInput: false,
+        shopUpgradeInProgress: false
+      });
+    } else {
+      // Card costs too much for the upgrade
+      return gameState;
+    }
+  }
+  
+  // Normal buying - check if player has enough gold and buys
   if (gameState.player.gold < card.cost || gameState.player.buys < 1) {
     return gameState;
   }
@@ -269,6 +296,14 @@ export const selectCardFromHand = (gameState: GameState, cardId: string): GameSt
       currentEffect.type === 'TRASH_CARDS' &&
       !selectedCard.name.toLowerCase().includes('copper')) {
     // Cannot trash non-Copper cards with Accountant
+    return gameState;
+  }
+  
+  // Check maxCardsToTrash limit for TRASH_CARDS effect
+  if (currentEffect.type === 'TRASH_CARDS' && 
+      currentEffect.maxCardsToTrash !== undefined && 
+      pendingEffects.cardsSelected.length >= currentEffect.maxCardsToTrash) {
+    // Already selected maximum number of cards to trash
     return gameState;
   }
   
@@ -375,14 +410,18 @@ export const finishCardAction = (gameState: GameState): GameState => {
           const trashedCard = selectedCards[0];
           const targetCost = trashedCard.cost + (currentEffect.targetCost || 0);
           
-          // Mark state to indicate waiting for shop selection
+          // Instead of continuing the effect, we stop here to allow the player to select a card from the shop
+          // We'll need to temporarily store this upgrade state
           if (updatedState.pendingEffects) {
-            updatedState = {
+            // Return immediately without continuing to the next effect
+            return {
               ...updatedState,
               pendingEffects: {
                 ...updatedState.pendingEffects,
                 targetCost
-              }
+              },
+              shopUpgradeInProgress: true, // Add a new flag to indicate we're waiting for shop selection
+              // We keep isWaitingForInput true to prevent other actions
             };
           }
         }
@@ -460,13 +499,17 @@ export const endTurn = (gameState: GameState): GameState => {
   // Draw cards for next turn
   const playerWithCards = drawCards(nextTurnPlayer, nextTurnPlayer.cardDraw);
   
-  // Increment enemy damage
+  // Increment enemy damage every 5 rounds
+  const shouldIncreaseDamage = gameState.round % 5 === 0;
+  
   return {
     ...gameState,
     player: playerWithCards,
     enemy: {
       ...gameState.enemy,
-      damagePerTurn: gameState.enemy.damagePerTurn + 1
+      damagePerTurn: shouldIncreaseDamage ? 
+        gameState.enemy.damagePerTurn + 1 : 
+        gameState.enemy.damagePerTurn
     },
     round: gameState.round + 1
   };

@@ -60,4 +60,5 @@ export interface GameState {
     targetCost?: number;
   } | null;
   isWaitingForInput: boolean;
+  shopUpgradeInProgress?: boolean;
 }

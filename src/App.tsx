@@ -76,7 +76,9 @@ function App() {
           onBuyCard={buyCard} 
           playerGold={gameState.player.gold}
           playerBuys={gameState.player.buys}
-          disabled={gameState.activeCard !== null}
+          disabled={gameState.activeCard !== null && !gameState.shopUpgradeInProgress}
+          isUpgrading={gameState.shopUpgradeInProgress}
+          upgradeMaxCost={gameState.pendingEffects?.targetCost}
         />
         
         {gameState.gameOver && (

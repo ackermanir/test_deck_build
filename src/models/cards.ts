@@ -5,7 +5,7 @@ import { v4 as uuidv4 } from 'uuid';
 export const COPPER: Card = {
   id: 'copper',
   name: 'Copper',
-  cost: 0,
+  cost: 1,
   actionCost: 0,
   effects: [{ type: 'ADD_GOLD', value: 1 }]
 };
@@ -13,7 +13,7 @@ export const COPPER: Card = {
 export const PUNCH: Card = {
   id: 'punch',
   name: 'Punch',
-  cost: 0,
+  cost: 1,
   actionCost: 1,
   effects: [{ type: 'DAMAGE_ENEMY', value: 1 }]
 };
@@ -69,7 +69,6 @@ export const CLEANUP: Card = {
   cost: 3,
   actionCost: 1,
   effects: [
-    { type: 'ADD_ACTION', value: -1 },
     { 
       type: 'TRASH_CARDS', 
       value: 0, 
@@ -86,7 +85,6 @@ export const SEARCH: Card = {
   cost: 4,
   actionCost: 1,
   effects: [
-    { type: 'ADD_ACTION', value: -1 },
     { type: 'DRAW_CARDS', value: 3 }
   ]
 };
@@ -124,7 +122,6 @@ export const ACCOUNTANT: Card = {
   cost: 4,
   actionCost: 1,
   effects: [
-    { type: 'ADD_ACTION', value: -1 },
     { 
       type: 'TRASH_CARDS', 
       value: 0, 
@@ -141,7 +138,6 @@ export const UPGRADE: Card = {
   cost: 5,
   actionCost: 1,
   effects: [
-    { type: 'ADD_ACTION', value: -1 },
     { 
       type: 'TRASH_CARDS', 
       value: 0, 
@@ -159,7 +155,6 @@ export const SPEAR: Card = {
   cost: 6,
   actionCost: 1,
   effects: [
-    { type: 'ADD_ACTION', value: -1 },
     { type: 'DAMAGE_ENEMY', value: 5 }
   ]
 };
