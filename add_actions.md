@@ -1,0 +1,35 @@
+I want to add more complex actions onto the game.
+
+- When a card is selected, the effects should happen in order.
+- When a user selects a card with an effect which requires user input, action buttons should appear as well as prompt for what user can do (basically the cards effect).
+  - There should be a cancel action which undoes all effects of the card done so far
+     - This means if the user had selected a card which reduces one action then trashed one card then hits cancel, that card should come back from trash, then one action refunded.
+  - There should be a finish action which ends the action early if users chooses not to perform all actions
+     - If a card allows a user to trash up to 3 cards, they may choose finish after trashing 2 cards for example.
+- There is a new concept: Trash
+  - Trash is the ability for the player to select a card from their hand.
+  - Trashed cards are removed from the game, not put into the discard.
+- New cards
+  - 10x Cleanup - Cost 3 gold
+    - -1 action for player
+    - User can trash up to 3 cards from their hand
+  - 10x Search - Cost 4 fold
+    - -1 action for player
+    - Draw 3 cards to player
+  - 10x Repurpose - Cost 2 gold
+    - Discard any number of cards.
+    - For each card discarded another card is drawn
+    - Note: all discards must happen before the drawn is done
+  - 10x Everything - Cost 5 gold
+    - Draw 1 card to player
+    - +1 buy for the player
+    - +1 gold for the player
+  - 10x Accountant - Cost 4 gold
+    - -1 action for player
+    - You may trash a Copper from hand for +3 gold
+  - 10x Upgrade - Cost 5 gold
+    - -1 action
+    - Trash a card, then the user can gain a card from shop costing up to 2 more than card cost
+  - 10x Spear - Cost 6 gold
+    - -1 action
+    - 5 damage to enemy

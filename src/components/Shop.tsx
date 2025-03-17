@@ -7,9 +7,10 @@ interface ShopProps {
   onBuyCard: (cardId: string) => void;
   playerGold: number;
   playerBuys: number;
+  disabled?: boolean;
 }
 
-const Shop: React.FC<ShopProps> = ({ cards, onBuyCard, playerGold, playerBuys }) => {
+const Shop: React.FC<ShopProps> = ({ cards, onBuyCard, playerGold, playerBuys, disabled = false }) => {
   // Group cards by type for better display
   const groupedCards: { [key: string]: CardType[] } = {};
   
@@ -31,7 +32,7 @@ const Shop: React.FC<ShopProps> = ({ cards, onBuyCard, playerGold, playerBuys })
       }}>
         {Object.entries(groupedCards).map(([cardName, cardsOfType]) => {
           const card = cardsOfType[0];
-          const canBuy = playerGold >= card.cost && playerBuys > 0;
+          const canBuy = playerGold >= card.cost && playerBuys > 0 && !disabled;
           
           return (
             <div key={cardName} style={{ textAlign: 'center' }}>

@@ -13,11 +13,19 @@ export type EffectType =
   | 'ADD_ACTION' 
   | 'ADD_HEALTH_PLAYER' 
   | 'DAMAGE_ENEMY' 
-  | 'DRAW_CARDS';
+  | 'DRAW_CARDS'
+  | 'TRASH_CARDS'
+  | 'DISCARD_CARDS'
+  | 'ADD_BUY';
 
 export interface Effect {
   type: EffectType;
   value: number;
+  requireInput?: boolean;
+  maxCardsToTrash?: number;
+  maxCardsToDiscard?: number;
+  targetCost?: number;
+  description?: string;
 }
 
 export interface Player {
@@ -29,6 +37,7 @@ export interface Player {
   hand: Card[];
   drawPile: Card[];
   discardPile: Card[];
+  trashPile: Card[];
 }
 
 export interface Enemy {
@@ -43,4 +52,12 @@ export interface GameState {
   shopCards: Card[];
   gameOver: boolean;
   winner: 'player' | 'enemy' | null;
+  activeCard: Card | null;
+  activeEffectIndex: number;
+  pendingEffects: {
+    effectIndex: number;
+    cardsSelected: Card[];
+    targetCost?: number;
+  } | null;
+  isWaitingForInput: boolean;
 }

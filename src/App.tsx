@@ -7,7 +7,18 @@ import Shop from './components/Shop';
 import GameOver from './components/GameOver';
 
 function App() {
-  const { gameState, playCard, buyCard, endTurn, newGame } = useGameState();
+  const { 
+    gameState, 
+    playCard, 
+    selectCard,
+    cancelAction,
+    finishAction,
+    buyCard, 
+    endTurn, 
+    newGame,
+    currentEffect,
+    selectedCards
+  } = useGameState();
   
   return (
     <div className="app">
@@ -31,7 +42,7 @@ function App() {
         }}>
           <button 
             onClick={endTurn}
-            disabled={gameState.gameOver}
+            disabled={gameState.gameOver || gameState.activeCard !== null}
             style={{
               padding: '10px 20px',
               fontSize: '16px',
@@ -39,8 +50,8 @@ function App() {
               color: '#fff',
               border: 'none',
               borderRadius: '5px',
-              cursor: gameState.gameOver ? 'not-allowed' : 'pointer',
-              opacity: gameState.gameOver ? 0.6 : 1
+              cursor: (gameState.gameOver || gameState.activeCard !== null) ? 'not-allowed' : 'pointer',
+              opacity: (gameState.gameOver || gameState.activeCard !== null) ? 0.6 : 1
             }}
           >
             End Turn
@@ -49,8 +60,15 @@ function App() {
         
         <Hand 
           cards={gameState.player.hand} 
-          onPlayCard={playCard} 
-          playerActions={gameState.player.actions} 
+          onPlayCard={playCard}
+          onSelectCard={selectCard}
+          onCancelAction={cancelAction}
+          onFinishAction={finishAction}
+          playerActions={gameState.player.actions}
+          waitingForInput={gameState.isWaitingForInput}
+          activeCard={gameState.activeCard}
+          activeEffect={currentEffect}
+          selectedCards={selectedCards}
         />
         
         <Shop 
@@ -58,6 +76,7 @@ function App() {
           onBuyCard={buyCard} 
           playerGold={gameState.player.gold}
           playerBuys={gameState.player.buys}
+          disabled={gameState.activeCard !== null}
         />
         
         {gameState.gameOver && (
