@@ -1,4 +1,4 @@
-import { useState } from 'react';
+// React import is implicitly used by JSX
 import './App.css';
 import { useGameState } from './hooks/useGameState';
 import Stats from './components/Stats';

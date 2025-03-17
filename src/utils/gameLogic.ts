@@ -1,4 +1,4 @@
-import { Card, Effect, GameState, Player, Enemy, EffectType } from '../models/types';
+import { Card, Effect, GameState, Player } from '../models/types';
 import { createStarterDeck, createShopCards } from '../models/cards';
 
 // Shuffle an array using Fisher-Yates algorithm
